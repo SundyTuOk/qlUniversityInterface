@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/mybatis-3-mapper.dtd">
+<mapper namespace="com.sf.login.dao.GatherDAO">
+	<resultMap type="com.sf.db.domain.Gather" id="GatherMap">
+         <id column="gather_id" property="gatherID"/>
+         <result column="area_id" property="areaID"/>
+         <result column="architecture_id" property="architectureID"/>
+         <result column="datasite_id" property="datasiteID"/>
+         <result column="gather_state" property="gatherState"/>
+         <result column="gather_num" property="gatherNum"/>
+         <result column="gather_name" property="gatherName"/>
+         <result column="gather_address" property="gatherAddress"/>
+         <result column="gather_password" property="gatherPassword"/>
+         <result column="gather_installaddress" property="gatherInstalladdress"/>
+         <result column="gather_changshang" property="gatherManufacturer"/>
+         <result column="gather_banben" property="gatherversions"/>
+         <result column="gather_size" property="gatherSize"/>
+         <result column="protocol" property="protocol"/>
+         <result column="sendway" property="sendway"/>
+         <result column="lasttime" property="lastTime"/>
+         <result column="ip" property="IP"/>
+         <result column="lastsettime" property="lastSettime"/>
+         <result column="lastsetmsg" property="lastsetMsg"/>
+         <result column="gather_style" property="gatherStyle"/>
+        
+    </resultMap>
+
+</mapper>

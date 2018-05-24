@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<settings>
+        <setting name="logImpl" value="STDOUT_LOGGING"/>
+    </settings>
+    <mappers>
+       <mapper resource="mybatis/mapping/UsersMapper.xml"/>
+       <mapper resource="mybatis/mapping/AmmeterMapper.xml"/>
+       <mapper resource="mybatis/mapping/ZAmDatasMapper.xml"/>
+       <mapper resource="mybatis/mapping/AmmeterAPDatasMapper.xml"/>
+       <mapper resource="mybatis/mapping/ApSaleInfoMapper.xml"/>
+       <mapper resource="mybatis/mapping/PriceMapper.xml"/>
+       <mapper resource="mybatis/mapping/APCardErrorInfo.xml"/>
+       <mapper resource="mybatis/mapping/APCardDZ.xml"/>
+       <mapper resource="mybatis/mapping/ApCardSaleInfo.xml"/>
+       
+      <!--  <mapper resource="mybatis/mapping/GatherMapper.xml"/> -->
+    </mappers>
+    
+</configuration>

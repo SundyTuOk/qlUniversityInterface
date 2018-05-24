@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/mybatis-3-mapper.dtd">
+<mapper namespace="com.sf.qlinterface.dao.ApCardErrorInfoDAO">
+	<resultMap type="com.sf.db.domain.ApCardErrorInfo" id="APCardErrorInfoMap">
+         <id column="apcarderrorinfo_id" property="apCardErrorInfoID"/>
+         <result column="apcardsaleinfo_id" property="apCardSaleInfoID"/>
+         <result column="apcarddz_id" property="apCardDZID"/>
+         <result column="saleinfonum" property="saleInfoNum"/>
+         <result column="errortype" property="errorType"/>
+         <result column="execstate" property="execState"/>
+         <result column="buytime" property="buyTime"/>
+         <result column="ammeter_name" property="amMeterName"/>
+    </resultMap>
+	
+	<insert id="addApCardErrorInfo" parameterType="com.sf.db.domain.ApCardErrorInfo" useGeneratedKeys="true" keyProperty="apCardErrorInfoID" keyColumn="apCardErrorInfo_ID">
+  		insert into APCardErrorInfo values(#{apCardSaleInfoID},#{apCardDZID},#{saleInfoNum},#{errorType},#{execState},#{buyTime},#{amMeterName})
+	</insert>
+	
+	<update id="updateExecState">
+  		update APCardErrorInfo set ExecState = #{execState} where apCardErrorInfo_ID = #{apCardErrorInfoID}
+	</update>
+</mapper>

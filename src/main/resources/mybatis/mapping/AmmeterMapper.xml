@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/mybatis-3-mapper.dtd">
+<mapper namespace="com.sf.qlinterface.dao.AmmeterDAO">
+	<resultMap type="com.sf.db.domain.Ammeter" id="ammeterMap">
+         <id column="ammeter_id" property="ammeterID"/>
+         <result column="ammeter_point" property="ammeterPoint"/>
+         <result column="area_id" property="areaID"/>
+         <result column="architecture_id" property="architectureID"/> 
+         <result column="gather_id" property="gatherID"/>
+         <result column="ammeter_num" property="ammeterNum"/>
+         <result column="ammeter_name" property="ammeterName"/> 
+         <result column="ammeter_password" property="ammeterPassword"/>
+         <result column="ammeter_485address" property="ammeter485Address"/>
+         <result column="maker" property="maker"/>
+         <result column="makercode" property="makerCode"/>
+         <result column="assetno" property="assetno"/>
+         <result column="issupply" property="isSupply"/>
+         <result column="zvalue" property="zValue"/>
+         <result column="jvalue" property="jValue"/>
+         <result column="fvalue" property="fValue"/>
+         <result column="pvalue" property="pValue"/>
+         <result column="gvalue" property="gValue"/>
+         <result column="useamstyle" property="useAmStyle"/>
+         <result column="consumernum" property="consumerNum"/>
+         <result column="consumername" property="consumerName"/>
+         <result column="consumerphone" property="consumerPhone"/>
+         <result column="consumeraddress" property="consumerAddress"/>
+         <result column="isimportantuser" property="isImportantUser"/>
+         <result column="iscountmeter" property="isCountMeter"/>
+         <result column="iscomputation" property="isComputAtion"/>
+         <result column="ammeter_plose" property="ammeterPlose"/>
+         <result column="partment_id" property="partmentID"/>
+         <result column="floor" property="floor"/>
+         <result column="metestyle_id" property="metestyleID"/>
+         <result column="price_id" property="priceID"/>
+         <result column="ammeter_stat" property="ammeterStat"/>
+         <result column="isoffalarm" property="isOffalArm"/>
+         <result column="curpower" property="curPower"/>
+         <result column="costcheck" property="costCheck"/>
+         <result column="standbycheck" property="standbyCheck"/>
+         <result column="xiuzheng" property="correctValue"/>
+         <result column="lasttime" property="lastTime"/>
+         <result column="datafrom" property="dataFrom"/>
+         <result column="beily" property="beily"/>
+         <result column="parentid" property="parentID"/>
+         <result column="apstate" property="aPstate"/>
+         <result column="limitpart" property="limitPart"/>
+         <result column="apybvalue" property="apybValue"/>
+         <result column="iszb" property="isZb"/>
+         <result column="apmancount" property="apmanCount"/>
+         <result column="roommancount" property="roomMancount"/>
+         <result column="consumerdept" property="consumerDept"/>
+         <result column="isunifieddeduction" property="isUnIfiedDeducTion"/>
+         <result column="payno" property="payno"/>
+         <result column="temp1" property="temp1"/>
+         <result column="temp2" property="temp2"/>
+         <result column="isvccheck" property="isVccheck"/>
+         <result column="isrecycle" property="isRecycle"/>
+         <result column="metersealno" property="meterSealno"/>
+         <result column="boxsealno" property="boxSealno"/>
+         <result column="consumerid" property="consumerID"/>
+         <result column="powerlimit" property="powerLimit"/>
+    </resultMap>
+    
+    <select id="getAmmeterById" parameterType="int" resultMap="ammeterMap">
+        select * from ammeter where ammeter_id=#{id}
+    </select>
+
+	<select id="getAmmeterByConsumerNum" parameterType="int" resultMap="ammeterMap">
+        select top 1 * from ammeter where consumernum=#{consumerNum}
+    </select>
+</mapper>

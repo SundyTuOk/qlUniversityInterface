@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/mybatis-3-mapper.dtd">
+<mapper namespace="com.sf.login.dao.ArchiteCtureDAO">
+	<resultMap type="com.sf.db.domain.ArchiteCture" id="architeCtureMap">
+         <id column="architecture_id" property="architectureID"/>
+         <result column="area_id" property="areaId"/>
+         <result column="architecture_num" property="architeCtureNum"/>
+         <result column="architecture_name" property="architeCtureName"/>
+         <result column="architecture_style" property="architeCtureStyle"/>
+         <result column="architecture_storey" property="architeCtureStorey"/>
+         <result column="architecture_area" property="architeCtureArea"/>
+         <result column="architecture_aircondition" property="architeCtureAircondition"/>
+         <result column="architecture_function" property="architeCtureFunction"/>
+         <result column="architecture_fl" property="architeCtureFL"/>
+         <result column="architecture_floorstart" property="architeCtureFloorStart"/>
+         <result column="architecture_imgurl" property="architectureImgUrl"/>
+         <result column="architecture_advancepayment" property="architeCtureAdvancepayment"/>
+         <result column="architecture_man" property="architeCtureMan"/>
+         <result column="architecture_phone" property="architeCturePhone"/>
+         <result column="architecture_time" property="architeCtureTime"/>
+         <result column="count_man" property="countMan"/>
+         <result column="isenreport" property="isenReport"/>
+         <result column="isunit" property="isUnit"/>
+         
+    </resultMap>
+
+</mapper>

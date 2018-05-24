@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/mybatis-3-mapper.dtd">
+<mapper namespace="com.sf.login.dao.AmmeterDAO">
+	<resultMap type="com.sf.db.domain.Area" id="areaMap">
+         <id column="area_id" property="areaId"/>
+         <result column="area_num" property="areaNum"/>
+         <result column="area_name" property="areaName"/>
+         <result column="area_address" property="areaAddress"/>
+         <result column="area_phone" property="areaPhone"/>
+         <result column="area_remark" property="areaRemark"/>
+         
+    </resultMap>
+
+</mapper>

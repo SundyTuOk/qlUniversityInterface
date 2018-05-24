@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="sepweb:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <root id="archive" name="com.sf.sep.web.war">
+      <element id="artifact" artifact-name="sepweb:war exploded" />
+    </root>
+  </artifact>
+</component>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/mybatis-3-mapper.dtd">
+<mapper namespace="com.sf.qlinterface.dao.ApCardDZDAO">
+	<resultMap type="com.sf.db.domain.ApCardDZ" id="apCardDZMap">
+         <id column="apcarddz_id" property="apCardDZID"/>
+         <result column="apcarddztime" property="apCardDZTime"/>
+         <result column="cardmoney" property="cardMoney"/>
+         <result column="apmoney" property="apMoney"/>
+         <result column="cmoney" property="cMoney"/>
+         <result column="cardcounttimes" property="cardCountTimes"/>
+         <result column="cardtimes" property="cardTimes"/>
+         <result column="aptimes" property="aPTimes"/>
+         <result column="eroortimes" property="eroorTimes"/>
+         <result column="exectimes" property="execTimes"/>
+         <result column="users_id" property="usersID"/>
+         <result column="inserttime" property="insertTime"/>
+         
+    </resultMap>
+    
+    <insert id="addApCardDZ" parameterType="com.sf.db.domain.ApCardDZ" useGeneratedKeys="true" keyProperty="apCardDZID" keyColumn="apCardDZ_ID">
+  		insert into ApCardDZ values(#{apCardDZTime},#{cardMoney},#{apMoney},#{cMoney},#{cardCountTimes},#{cardTimes},#{aPTimes},#{eroorTimes},#{execTimes},#{usersID},#{insertTime})
+	</insert>
+	
+	<!-- <update id="updateErrorTimes">
+		update ApCardDZ set EroorTimes=#{eroorTimes} where APCardDZ_ID = #{apCardDZID}
+	</update> -->
+	
+	<update id="updateApMoney">
+		update ApCardDZ set ApMoney = #{apMoney} where APCardDZ_ID = #{apCardDZID}
+	</update>
+	
+	<update id="updateCMoney">
+		update APCardDZ set CMoney = CardMoney - ApMoney where APCardDZ_ID = #{apCardDZID}
+	</update>
+	
+	<update id="updateApTimes">
+		update APCardDZ set APTimes = #{apTimes} where APCardDZ_ID = #{apCardDZID}
+	</update>
+	
+	<update id="updateErrorTimes">
+		update APCardDZ set EroorTimes = CardTimes - APTimes where APCardDZ_ID = #{apCardDZID}
+	</update>
+</mapper>

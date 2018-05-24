@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/mybatis-3-mapper.dtd">
+<mapper namespace="com.sf.qlinterface.dao.AmmeterAPDatasDAO">
+	<resultMap type="com.sf.db.domain.AmmeterAPDatas" id="ammeterAPDatasMap">
+         <id column="ammeter_id" property="ammeterID"/>
+         <result column="valuetime" property="valueTime"/>
+         <result column="symoney" property="syMoney"/>
+         <result column="tzmoney" property="tzMoney"/>
+         <result column="syvalue" property="syValue"/>
+         <result column="tzvalue" property="tzValue"/>
+         <result column="thiscircleVol" property="thisCircleVol"/>
+         <result column="lastcircleVol" property="lastCircleVol"/>
+    </resultMap>
+	
+	<select id="getLastAmmeterAPDatasByAmmeterId" parameterType="int" resultMap="ammeterAPDatasMap">
+        select top 1 * from AmmeterAPDatas where ammeter_id=#{id} order by valuetime desc
+    </select>
+</mapper>

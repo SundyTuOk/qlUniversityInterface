@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/mybatis-3-mapper.dtd">
+<mapper namespace="com.sf.login.dao.UsersDAO">
+	<resultMap type="com.sf.db.domain.User" id="userMap">
+        <id column="users_id" property="userID"/>
+        <result column="area_id" property="areaId"/>
+        <result column="users_num" property="userNum"/>
+         <result column="users_name" property="userNickName"/>
+        <result column="users_loginname" property="usersLoginName"/>
+        <result column="users_password" property="userPassword"/>
+        <result column="users_gender" property="userGender"/>
+        <result column="users_birth" property="userBirth"/>
+        <result column="users_photo" property="userPhoto"/>
+        <result column="users_department" property="userDepartment"/>
+        <result column="users_phone" property="userPhone"/>
+        <result column="users_phone1" property="userPhone1"/>
+        <result column="users_phone2" property="userPhone2"/>
+        <result column="users_homeaddress" property="userHomeAddress"/>
+        <result column="users_lasttime" property="userLasttime" jdbcType="TIMESTAMP"/>
+        <result column="users_regtime" property="userRegTime"/>
+        <result column="userstate_id" property="userStateId"/>
+        <result column="users_remark" property="userRemark"/>
+        <result column="onlinere" property="onlineRE"/>
+        <result column="ip" property="IP"/>
+        <result column="isalarm" property="isAlarm"/>
+        <result column="urlhost" property="urlHost"/>
+    </resultMap>
+
+    <select id="getUserById" parameterType="int" resultMap="userMap">
+        select * from users where users_id=#{id}
+    </select>
+    
+    <select id="getUserByUsername" parameterType="String" resultMap="userMap">
+        select * from users where users_loginname=#{username}
+    </select>
+    
+    <select id="getPasswordByUsername" parameterType="String" resultType="String">
+    	select users_password from users where users_loginname=#{username}
+    </select>
+    
+</mapper>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/mybatis-3-mapper.dtd">
+<mapper namespace="com.sf.qlinterface.dao.ApCardSaleInfoDAO">
+	<resultMap type="com.sf.db.domain.ApCardSaleInfo" id="apCardsaleinfoMap">
+         <id column="apcardsaleinfo_id" property="apCardSaleInfoID"/>
+         <result column="apcarddz_id" property="apCardDZID"/>
+         <result column="buytime" property="buyTime"/>
+         <result column="posnum" property="posNum"/>
+         <result column="cardmannum" property="cardManNum"/>
+         <result column="cardmanname" property="cardManName"/>
+         <result column="studentnum" property="studentNum"/>
+         <result column="themoney" property="theMoney"/>
+         <result column="ymoney" property="yMoney"/>
+         <result column="usertimes" property="userTimes"/>
+         <result column="state" property="state"/>
+         <result column="remark" property="remark"/>
+         <result column="saleinfonum" property="saleInfoNum"/>
+         
+    </resultMap>
+
+	<insert id="addApCardSaleInfo" parameterType="com.sf.db.domain.ApCardSaleInfo" useGeneratedKeys="true" keyProperty="apCardSaleInfoID" keyColumn="apCardSaleInfo_ID">
+  		insert into ApCardSaleInfo(apcarddz_id,buytime,posnum,cardmannum,cardmanname,studentnum,themoney,ymoney,usertimes,state,remark,saleinfonum) values(#{apCardDZID},#{buyTime},#{posNum},#{cardManNum},#{cardManName},#{studentNum},#{theMoney},#{yMoney},#{userTimes},#{state},#{remark},#{saleInfoNum})
+	</insert>
+	
+	<update id="updateState">
+		update ApCardSaleInfo set State=#{state} where APCardSaleInfo_ID = #{apCardSaleInfoID}
+	</update>
+
+</mapper>

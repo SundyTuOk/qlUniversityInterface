@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/mybatis-3-mapper.dtd">
+<mapper namespace="com.sf.qlinterface.dao.PriceDAO">
+	<resultMap type="com.sf.db.domain.Price" id="PriceMap">
+         <id column="price_id" property="priceId"/>
+         <result column="price_style" property="priceStyle"/>
+         <result column="price_num" property="priceNum"/>
+         <result column="price_name" property="priceName"/>
+         <result column="price_value" property="priceValue"/>
+         <result column="bjvalue" property="bjValue"/>
+         <result column="lzvalue" property="lzValue"/>
+         <result column="ybvalue" property="ybValue"/>
+         <result column="exfz" property="exfz"/>
+         <result column="exfzxx" property="exfzsx"/>
+         <result column="exfzxx" property="exfzxx"/>
+         <result column="autocut" property="autoCut"/>
+         <result column="limit" property="limit"/>
+         <result column="exfzhf" property="exfzhf"/>
+         <result column="ybmonthlist" property="ybMonthList"/>
+         <result column="tydsd" property="tydsd"/>
+         <result column="qdyff" property="qdyff"/>
+         <result column="autotz" property="autotz"/>
+         <result column="tzdl" property="tzdl"/>
+    </resultMap>
+
+	<select id="getPriceValueByPriceID" parameterType="int" resultType="Float">
+        select * from price where price_id=#{priceId}
+    </select>
+</mapper>

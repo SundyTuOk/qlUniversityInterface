@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/mybatis-3-mapper.dtd">
+<mapper namespace="com.sf.qlinterface.dao.ZAmDatasDAO">
+    
+    <resultMap type="com.sf.db.domain.ZAmDatas" id="zAmDatasMap">
+         <id column="valuetime" jdbcType="TIMESTAMP" property="valueTime"/>
+         <result column="zvaluezy" property="zValueZY"/>
+    </resultMap>
+    
+    <select id="getZAmDatasByValueTime"  resultMap="zAmDatasMap">
+        select * from ${zAMTableName} where valuetime=#{date}
+    </select>
+    
+    <select id="getLastZamDatas"  resultMap="zAmDatasMap">
+        select top 1 * from ${zAMTableName} order by valuetime
+    </select>
+    
+</mapper>

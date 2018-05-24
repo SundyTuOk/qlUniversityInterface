@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/mybatis-3-mapper.dtd">
+<mapper namespace="com.sf.qlinterface.dao.ApSaleInfoDAO">
+	<resultMap type="com.sf.db.domain.ApSaleInfo" id="apsaleinfoMap">
+         <id column="saleinfonum" property="saleInfoNum"/>
+         <result column="ammeter_id" property="ammeterID"/>
+         <result column="ammeter_name" property="ammeterName"/>
+         <result column="ammeter_485address" property="ammeter_485Address"/>
+         <result column="times" property="times"/>
+         <result column="kind" property="kind"/>
+         <result column="qSYvalue" property="qSYValue"/>
+         <result column="hSYvalue" property="hSYValue"/>
+         <result column="users_id" property="usersId"/>
+         <result column="buytime" property="buyTime"/>
+         <result column="sendtime" property="sendTime"/>
+         <result column="status" property="status"/>
+         <result column="price" property="price"/>
+         <result column="thegross" property="thegross"/>
+         <result column="themoney" property="themoney"/>
+         <result column="studentid" property="studentID"/>
+         <result column="orderno" property="orderNo"/>
+         <result column="sign" property="sign"/>
+         <result column="users_name" property="usersName"/>
+         <result column="repeattime" property="repeatTime"/>
+         <result column="saletype" property="saleType"/>
+         <result column="existInvoice" property="existInvoice"/>
+    </resultMap>
+	
+	<select id="getLastApSaleInfo"  resultMap="apsaleinfoMap">
+        select top 1 * from ApSaleInfo order by saleinfonum desc
+    </select>
+    
+    <insert id="addApSaleInfo" parameterType="com.sf.db.domain.ApSaleInfo">
+  		insert into ApSaleInfo values(#{saleInfoNum},#{ammeterID},#{ammeterName},#{ammeter_485Address},#{times},#{kind},#{qSYValue},#{hSYValue},#{usersId},#{buyTime},#{sendTime},#{status},#{price},#{thegross},#{themoney}, #{studentID},#{orderNo},#{sign},#{usersName},#{repeatTime},#{saleType},#{existInvoice})
+	</insert>
+	
+	<select id="getApSaleInfoByOrderNo"  resultMap="apsaleinfoMap">
+        select * from ApSaleInfo where orderNo = #{orderNo}
+    </select>
+
+</mapper>
