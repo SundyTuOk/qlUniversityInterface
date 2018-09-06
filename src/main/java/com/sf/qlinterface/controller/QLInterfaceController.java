@@ -1,5 +1,6 @@
 package com.sf.qlinterface.controller;
 
+import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -14,8 +15,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import net.sf.json.JSONObject;
+import net.sf.json.JsonConfig;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -39,6 +42,12 @@ public class QLInterfaceController {
 	
 	private Logger logger = Logger.getLogger(QLInterfaceController.class);
 	
+	@Value("#{projectSettings['cert.encryptionFileName']}")
+	private String encryptionFileName;
+	
+	@Value("#{projectSettings['cert.decryptionFileName']}")
+	private String decryptionFileName;
+	
 	/**
 	 * 盛帆提供给齐鲁大学接口分发器，根据request里面的intId(接口id)，来分发给不同的接口处理
 	 * @param req
@@ -48,9 +57,17 @@ public class QLInterfaceController {
 	@RequestMapping(value="/login",method=RequestMethod.POST) 
 	@ResponseBody
 	public String check(HttpServletRequest req,HttpServletResponse rsp) throws ParseException{
-		logger.info("---------"+req.getServletContext().getRealPath("/")+"WEB-INF\\classes\\cert\\");
-		String encryptionPath = req.getServletContext().getRealPath("/")+"WEB-INF\\classes\\cert\\1.pfx";
-		String decryptionPath = req.getServletContext().getRealPath("/")+"WEB-INF\\classes\\cert\\1.crt";
+//		logger.info("---------"+req.getServletContext().getRealPath("/")+"WEB-INF\\classes\\cert\\");
+//		String encryptionPath = req.getServletContext().getRealPath("/")+"WEB-INF\\classes\\cert\\1.pfx";
+//		String decryptionPath = req.getServletContext().getRealPath("/")+"WEB-INF\\classes\\cert\\1.crt";
+		String encryptionPath = 
+				req.getServletContext().getRealPath("/")
+				+"WEB-INF"+File.separator+"classes"
+				+File.separator+"cert"+File.separator+encryptionFileName;
+		String decryptionPath = 
+				req.getServletContext().getRealPath("/")
+				+"WEB-INF"+File.separator+"classes"
+				+File.separator+"cert"+File.separator+decryptionFileName;
 		
 		logger.info("加密证书路径->"+encryptionPath+"\n解密证书路径->"+decryptionPath);
 		
@@ -62,6 +79,7 @@ public class QLInterfaceController {
 			logger.error("从HttpServletRequest里面获取输入数据流失败，请检查网络状况");
 			return null;
 		}
+		
 		JSONObject jsonObject =JSONObject.fromObject(jsonString);
 		String interfaceId = jsonObject.optString(Constant.INTID);
 		

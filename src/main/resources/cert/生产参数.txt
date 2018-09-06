@@ -1,0 +1,13 @@
+商户号：	111267
+证书密码：	corp2wsx
+加密密钥：	corp2wsx
+
+FTP-IP:		47.94.45.32
+FTP-PORT:	50021
+FTP-USER:	qilu
+FTP-PASS:	qilu324%#@D
+
+压缩密码：sdili
+
+
+

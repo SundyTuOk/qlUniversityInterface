@@ -2,9 +2,10 @@ package com.sf.qlinterface.service;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -71,6 +72,11 @@ public class QLInterfaceServiceImpl implements QLInterfaceService{
 	@Resource(name="apCardErrorInfoDAO")
 	private ApCardErrorInfoDAO apCardErrorInfoDAO;
 	
+	@Value("#{projectSettings['cert.password']}")
+	private String certPassword;
+	@Value("#{projectSettings['cert.encryptionPassword']}")
+	private String encryptionPassword;
+	
 
 	public Ammeter getAmmeterByConsumerNum(String comsumerNum) {
 		return ammeterDAO.getAmmeterByConsumerNum(comsumerNum);
@@ -121,7 +127,7 @@ public class QLInterfaceServiceImpl implements QLInterfaceService{
 		//解密，解密后数据参见接口文档，参数说明：strDes=密文 signMsg=签名字符串 certPath=公钥证书路径  strKey=加密密钥 signKey=签名干扰串
 		JSONObject reqData = null;
 		try{
-			reqData =  FrontCrypt.decryptWithKey(strDes,signMsg,decryptionPath,"12345678","");
+			reqData =  FrontCrypt.decryptWithKey(strDes,signMsg,decryptionPath,encryptionPassword,"");
 		}catch(Exception e){
 			logger.error(e);
 			logger.error("返回错误码->000001,描述->接口参数不足，拒绝受理:请求的json格式或者内容不正确");
@@ -177,8 +183,8 @@ public class QLInterfaceServiceImpl implements QLInterfaceService{
 
 			Map<String,String> infoMap2 = new HashMap<String, String>();
 			infoMap2.put("key","balance");
-			infoMap2.put("keyName","余额");
-			infoMap2.put("keyValue",ammeterAPDatas.getSyMoney().toString());
+			infoMap2.put("keyName","剩余电量");
+			infoMap2.put("keyValue",ammeterAPDatas.getSyValue().toString());
 			infoList.add(infoMap2);
 			
 //			Map<String,String> infoMap3 = new HashMap<String, String>();
@@ -202,7 +208,7 @@ public class QLInterfaceServiceImpl implements QLInterfaceService{
 		
 		// 加密后的strDesMap
 		//加密，参数说明：strDes=密文 certPath=私钥证书路径  strKey=加密密钥 signKey=签名干扰串
-		Map<String, String> strDesMapEncryption = FrontCrypt.encryptWithKey(strDesMap,encryptionPath,"12345678","12345678","");
+		Map<String, String> strDesMapEncryption = FrontCrypt.encryptWithKey(strDesMap,encryptionPath,certPassword,encryptionPassword,"");
 		
 		Map<String, Object> returnMap = PreCommonMethod.returnMap(jsonObject.optString(CommonParamUtils.version), 
 				jsonObject.optString(CommonParamUtils.charset), 
@@ -261,7 +267,7 @@ public class QLInterfaceServiceImpl implements QLInterfaceService{
 		//解密，解密后数据参见接口文档，参数说明：strDes=密文 signMsg=签名字符串 certPath=公钥证书路径  strKey=加密密钥 signKey=签名干扰串
 		JSONObject reqData = null;
 		try{
-			reqData =  FrontCrypt.decryptWithKey(strDes,signMsg,decryptionPath,"12345678","");
+			reqData =  FrontCrypt.decryptWithKey(strDes,signMsg,decryptionPath,encryptionPassword,"");
 		}catch(Exception e){
 			logger.error(e);
 			logger.error("返回错误码->000001,描述->接口参数不足，拒绝受理:请求的json格式或者内容不正确");
@@ -316,11 +322,13 @@ public class QLInterfaceServiceImpl implements QLInterfaceService{
 		
 		if(ammeter.getaPstate() == null || !ammeter.getaPstate().equals("开户")){
 			// 没有开户，不允许充值
+			logger.info("没有开户，不允许充值");
 			strDesMap = returnFailDesMap("000002", "系统错误，请联系管理员处理:电表没有开户，请先开户");
 		}
 		try{
 			if(apSaleInfoDAO.getApSaleInfoByOrderNo(serioNo) != null){
 				// 本次充值在apsaleinfo表里面已经存在
+				logger.info("本次充值在apsaleinfo表里面已经存在,处理完成或接收成功:本次充值编号在系统已经存在");
 				strDesMap = returnFailDesMap("000000", "处理完成或接收成功:本次充值编号在系统已经存在");
 			}
 		}catch(Exception e){
@@ -335,6 +343,7 @@ public class QLInterfaceServiceImpl implements QLInterfaceService{
 		
 		if(strDesMap == null){
 			try{
+				logger.info("准备开始插入售电单");
 				Long saleInfoNumber = Long.valueOf(saleInfoNum)+1;
 				ApSaleInfo apSaleInfo = new ApSaleInfo();
 				apSaleInfo.setAmmeterID(ammeter.getAmmeterID());
@@ -344,6 +353,9 @@ public class QLInterfaceServiceImpl implements QLInterfaceService{
 				apSaleInfo.setBuyTime(tradeTimeDate);
 				apSaleInfo.setStatus(0);
 				apSaleInfo.setOrderNo(serioNo);
+				apSaleInfo.setUsersId(1);
+				apSaleInfo.setSaleType(0);
+				apSaleInfo.setExistInvoice(0);
 				
 				Float priceValue = priceDAO.getPriceValueByPriceID(ammeter.getPriceID());
 				apSaleInfo.setPrice(priceValue);
@@ -351,11 +363,13 @@ public class QLInterfaceServiceImpl implements QLInterfaceService{
 				apSaleInfo.setThegross(thegross);
 				apSaleInfo.setThemoney(theMoney);
 				apSaleInfo.setUsersName("齐鲁大学接口售电");
+				apSaleInfo.setRepeatTime(0);
 				while(true){
 					apSaleInfo.setSaleInfoNum(saleInfoNumber.toString());
 					int line = apSaleInfoDAO.addApSaleInfo(apSaleInfo);
 					if(line == 1){
 						// 插入成功
+						logger.info("插入售电单,单号:"+saleInfoNumber);
 						break;
 					}
 					saleInfoNumber++;
@@ -372,7 +386,7 @@ public class QLInterfaceServiceImpl implements QLInterfaceService{
 		//加密，参数说明：strDes=密文 certPath=私钥证书路径  strKey=加密密钥 signKey=签名干扰串
 		// 加密后的map
 		Map<String, String> strDesMapEncryption = FrontCrypt.encryptWithKey(strDesMap,encryptionPath,
-				"12345678","12345678","");
+				certPassword,encryptionPassword,"");
 		Map<String, Object> returnMap = PreCommonMethod.returnMap(jsonObject.optString(CommonParamUtils.version)
 				, jsonObject.optString(CommonParamUtils.charset)
 				, jsonObject.optString(CommonParamUtils.tradeNo)
@@ -386,8 +400,6 @@ public class QLInterfaceServiceImpl implements QLInterfaceService{
 		return returnObj.toString();
 	}
 	
-//	@Value("#{propertyConfigurer1['ip']}")
-//	@Value("${ip}")
 	@Value("#{projectSettings['ftp.ip']}")
 	private String ftpIP;
 	@Value("#{projectSettings['ftp.port']}")
@@ -421,7 +433,7 @@ public class QLInterfaceServiceImpl implements QLInterfaceService{
 		//解密，解密后数据参见接口文档，参数说明：strDes=密文 signMsg=签名字符串 certPath=公钥证书路径  strKey=加密密钥 signKey=签名干扰串
 		JSONObject reqData = null;
 		try{
-			reqData =  FrontCrypt.decryptWithKey(strDes,signMsg,decryptionPath,"12345678","");
+			reqData =  FrontCrypt.decryptWithKey(strDes,signMsg,decryptionPath,encryptionPassword,"");
 		}catch(Exception e){
 			logger.error(e);
 			logger.error("返回错误码->000001,描述->接口参数不足，拒绝受理:请求的json格式或者内容不正确");
@@ -479,7 +491,7 @@ public class QLInterfaceServiceImpl implements QLInterfaceService{
 		if(strDesMap == null){
 			// 准备从ftp服务器下载文件
 			logger.info("准备从ftp服务器下载文件");
-			localFile = ftpFilePath + filePath + File.separator;
+			localFile = ftpFilePath + File.separator + filePath;
 			File ftpLocalFile = new File(localFile);
 			if(!ftpLocalFile.exists()){
 				ftpLocalFile.mkdirs();
@@ -513,7 +525,8 @@ public class QLInterfaceServiceImpl implements QLInterfaceService{
 			File ftpFile = new File(localFile + fileName);
 			BufferedReader br = null;
 			try {
-				br = new BufferedReader(new FileReader(ftpFile));
+//				br = new BufferedReader(new FileReader(ftpFile));
+				br = new BufferedReader(new InputStreamReader(new FileInputStream(ftpFile),"UTF-8"));
 				while((temp = br.readLine()) != null){
 					ftpFileContent.append(temp);
 				}
@@ -531,7 +544,7 @@ public class QLInterfaceServiceImpl implements QLInterfaceService{
 			
 			logger.debug("读取到ftp对账文件内容->" + ftpFileContent.toString());
 			try{
-				decryptionContent = DESUtil.decryptDES(ftpFileContent.toString(), "12345678");
+				decryptionContent = DESUtil.decryptDES(ftpFileContent.toString(), encryptionPassword);
 				logger.debug("解密后ftp对账文件内容->" + decryptionContent);
 			}catch(Exception e){
 				logger.error(e);
@@ -688,6 +701,9 @@ public class QLInterfaceServiceImpl implements QLInterfaceService{
 						missingApSaleInfo.setStatus(0);
 						missingApSaleInfo.setOrderNo(orderNo);
 						missingApSaleInfo.setBuyTime(buyTime);
+						missingApSaleInfo.setUsersId(1);
+						missingApSaleInfo.setSaleType(0);
+						missingApSaleInfo.setExistInvoice(0);
 						
 						Float priceValue = priceDAO.getPriceValueByPriceID(ammeter.getPriceID());
 						missingApSaleInfo.setPrice(priceValue);
@@ -695,6 +711,7 @@ public class QLInterfaceServiceImpl implements QLInterfaceService{
 						missingApSaleInfo.setThegross(thegross);
 						missingApSaleInfo.setThemoney(theMoney);
 						missingApSaleInfo.setUsersName("齐鲁大学接口售电漏充");
+						missingApSaleInfo.setRepeatTime(0);
 						
 						apSaleInfoDAO.addApSaleInfo(missingApSaleInfo);
 						logger.debug("向数据库补发ApSaleInfo->"+missingApSaleInfo.toString());
@@ -791,7 +808,7 @@ public class QLInterfaceServiceImpl implements QLInterfaceService{
 		
 		// 加密后的strDesMap
 		//加密，参数说明：strDes=密文 certPath=私钥证书路径  strKey=加密密钥 signKey=签名干扰串
-		Map<String, String> strDesMapEncryption = FrontCrypt.encryptWithKey(strDesMap,encryptionPath,"12345678","12345678","");
+		Map<String, String> strDesMapEncryption = FrontCrypt.encryptWithKey(strDesMap,encryptionPath,certPassword,encryptionPassword,"");
 		
 		Map<String, Object> returnMap = PreCommonMethod.returnMap(jsonObject.optString(CommonParamUtils.version), 
 				jsonObject.optString(CommonParamUtils.charset), 
@@ -858,7 +875,7 @@ public class QLInterfaceServiceImpl implements QLInterfaceService{
 		//解密，解密后数据参见接口文档，参数说明：strDes=密文 signMsg=签名字符串 certPath=公钥证书路径  strKey=加密密钥 signKey=签名干扰串
 		JSONObject reqData = null;
 		try{
-			reqData =  FrontCrypt.decryptWithKey(strDes,signMsg,decryptionPath,"12345678","");
+			reqData =  FrontCrypt.decryptWithKey(strDes,signMsg,decryptionPath,encryptionPassword,"");
 		}catch(Exception e){
 			logger.error(e);
 			logger.error("返回错误码->000001,描述->接口参数不足，拒绝受理:请求的json格式或者内容不正确");
@@ -876,7 +893,7 @@ public class QLInterfaceServiceImpl implements QLInterfaceService{
 		
 		// 加密后的strDesMap
 		//加密，参数说明：strDes=密文 certPath=私钥证书路径  strKey=加密密钥 signKey=签名干扰串
-		Map<String, String> strDesMapEncryption = FrontCrypt.encryptWithKey(strDesMap,encryptionPath,"12345678","12345678","");
+		Map<String, String> strDesMapEncryption = FrontCrypt.encryptWithKey(strDesMap,encryptionPath,certPassword,encryptionPassword,"");
 		
 		Map<String, Object> returnMap = PreCommonMethod.returnMap(jsonObject.optString(CommonParamUtils.version), 
 				jsonObject.optString(CommonParamUtils.charset), 

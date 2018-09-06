@@ -24,6 +24,6 @@
     </resultMap>
 
 	<select id="getPriceValueByPriceID" parameterType="int" resultType="Float">
-        select * from price where price_id=#{priceId}
+        select price_value from price where price_id=#{priceId}
     </select>
 </mapper>
